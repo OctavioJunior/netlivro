@@ -11,6 +11,11 @@ public class Autor {
     @OneToMany(mappedBy = "autor")
     private List<Livro> livro = new ArrayList<>();
 
+    public Autor(){}
+    public Autor( String nome ) {
+        this.nome = nome;
+    }
+
     public Long getId() {
         return id;
     }
