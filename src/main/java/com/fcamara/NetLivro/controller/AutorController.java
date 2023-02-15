@@ -34,8 +34,13 @@ public class AutorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Autor> buscarAutorPeloID(@PathVariable Long id){
-        Optional<Autor> autor = autorRepository.findById(id);
-        return ResponseEntity.ok(autor.get());
+        Optional<Autor> optional = autorRepository.findById(id);
+
+        if(optional.isPresent()) {
+            return ResponseEntity.ok(optional.get());
+        }
+
+        return  ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -45,5 +50,33 @@ public class AutorController {
         URI uri = uriBuilder.path("/autor/{id}").buildAndExpand(autor.getId()).toUri();
         autorRepository.save(autor);
         return ResponseEntity.created(uri).body(autor);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Autor> atualizarAutor(@PathVariable Long id, @RequestBody @Valid AutorForm form) {
+        Optional<Autor> optional = autorRepository.findById(id);
+
+        if(optional.isPresent()) {
+            Autor autor = form.atualizar(id, autorRepository);
+
+            return ResponseEntity.ok(autor);
+        }
+
+        return  ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity removerAutor(@PathVariable Long id) {
+        Optional<Autor> optional = autorRepository.findById(id);
+
+        if(optional.isPresent()) {
+            autorRepository.deleteById(id);
+
+            return ResponseEntity.ok().build();
+        }
+
+        return  ResponseEntity.notFound().build();
     }
 }
