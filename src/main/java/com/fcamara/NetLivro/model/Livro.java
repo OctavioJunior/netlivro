@@ -1,5 +1,7 @@
 package com.fcamara.NetLivro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,13 +9,21 @@ public class Livro {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
-    @ManyToOne
+    @ManyToOne @JsonIgnore
     private Autor autor;
     @Enumerated(EnumType.STRING)
     private Genero genero;
     private String descricao;
 
+    public Livro() {
+    }
 
+    public Livro(String titulo, Autor autor, Genero genero, String descricao) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.genero = genero;
+        this.descricao = descricao;
+    }
 
     public Long getId() {
         return id;
