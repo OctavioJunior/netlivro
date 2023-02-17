@@ -5,10 +5,7 @@ import com.fcamara.NetLivro.model.Autor;
 import com.fcamara.NetLivro.repository.AutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
@@ -24,8 +21,8 @@ public class AutorController {
     private AutorRepository autorRepository;
 
     @GetMapping
-    public List<Autor> buscarTodosAutores(String nomeAutor){
-        if(nomeAutor == null) {
+    public List<Autor> buscarTodosAutores(String nomeAutor) {
+        if (nomeAutor == null) {
             return autorRepository.findAll();
         } else {
             return autorRepository.findByNomeContaining(nomeAutor);
@@ -33,19 +30,19 @@ public class AutorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Autor> buscarAutorPeloID(@PathVariable Long id){
+    public ResponseEntity<Autor> buscarAutorPeloID(@PathVariable Long id) {
         Optional<Autor> optional = autorRepository.findById(id);
 
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             return ResponseEntity.ok(optional.get());
         }
 
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Autor> criarAutor(@RequestBody @Valid AutorForm form, UriComponentsBuilder uriBuilder ){
+    public ResponseEntity<Autor> criarAutor(@RequestBody @Valid AutorForm form, UriComponentsBuilder uriBuilder) {
         Autor autor = form.converter();
         URI uri = uriBuilder.path("/autor/{id}").buildAndExpand(autor.getId()).toUri();
         autorRepository.save(autor);
@@ -57,13 +54,13 @@ public class AutorController {
     public ResponseEntity<Autor> atualizarAutor(@PathVariable Long id, @RequestBody @Valid AutorForm form) {
         Optional<Autor> optional = autorRepository.findById(id);
 
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Autor autor = form.atualizar(id, autorRepository);
 
             return ResponseEntity.ok(autor);
         }
 
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
@@ -71,12 +68,12 @@ public class AutorController {
     public ResponseEntity removerAutor(@PathVariable Long id) {
         Optional<Autor> optional = autorRepository.findById(id);
 
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             autorRepository.deleteById(id);
 
             return ResponseEntity.ok().build();
         }
 
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 }

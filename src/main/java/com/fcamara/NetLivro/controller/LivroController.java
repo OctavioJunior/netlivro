@@ -32,7 +32,7 @@ public class LivroController {
         if (nomeLivro == null) {
             livros = livroRepository.findAll();
         } else {
-            livros = livroRepository.findByTitulo(nomeLivro);
+            livros = livroRepository.findByTituloContaining(nomeLivro);
         }
         return livros;
     }
@@ -54,4 +54,28 @@ public class LivroController {
             URI uri = uriBuilder.path("/livro/{id}").buildAndExpand(livro.getId()).toUri();
             return ResponseEntity.created(uri).body(livro);
     }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Livro> atualizarLivro(@PathVariable Long id, @RequestBody @Valid LivroForm form){
+        Optional<Livro> optional = livroRepository.findById(id);
+        if(optional.isPresent()){
+            Livro livro = form.atualizar(id, livroRepository, autorRepository);
+            return ResponseEntity.ok(livro);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity removerLivro(@PathVariable Long id){
+        Optional<Livro> optional = livroRepository.findById(id);
+
+        if (optional.isPresent()){
+            livroRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
+
