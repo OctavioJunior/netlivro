@@ -3,6 +3,8 @@ package com.fcamara.NetLivro.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Livro {
@@ -14,6 +16,8 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     private Genero genero;
     private String descricao;
+    @OneToMany(mappedBy = "livro")
+    private List<Exemplar> exemplares = new ArrayList<>();
 
     public Livro() {
     }

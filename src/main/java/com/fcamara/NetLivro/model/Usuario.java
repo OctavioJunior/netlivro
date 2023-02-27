@@ -15,6 +15,8 @@ public class Usuario implements UserDetails {
     private Long id;
     private String email;
     private String senha;
+    @OneToMany(mappedBy = "usuario")
+    private List<Emprestimo> emprestimos = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Perfil> perfis = new ArrayList<>();
