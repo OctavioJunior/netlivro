@@ -4,10 +4,11 @@ import com.fcamara.NetLivro.model.Autor;
 import com.fcamara.NetLivro.model.Genero;
 import com.fcamara.NetLivro.model.Livro;
 import com.fcamara.NetLivro.repository.AutorRepository;
-import com.fcamara.NetLivro.repository.LivroRepository;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 public class LivroForm {
     @NotNull
@@ -51,15 +52,20 @@ public class LivroForm {
         this.descricao = descricao;
     }
 
-    public Livro converter(AutorRepository autorRepository) {
-        Autor autor = autorRepository.getReferenceById(autorId);
-        return new Livro(titulo, autor, genero, descricao);
+    public Livro converter(AutorRepository autorRepository) throws InvalidArgumentException {
+        Optional<Autor> autor = autorRepository.findById(autorId);
+
+        if(!autor.isPresent()) throw new InvalidArgumentException(new String[]{"autor não encontrado"});
+
+        return new Livro(titulo, autor.get(), genero, descricao);
     }
 
-    public Livro atualizar(Long id, LivroRepository livroRepository, AutorRepository autorRepository) {
-        Livro livro = livroRepository.getReferenceById(id);
-        Autor autor = autorRepository.getReferenceById(autorId);
-        livro.setAutor(autor);
+    public Livro atualizar(Livro livro, AutorRepository autorRepository) throws InvalidArgumentException {
+        Optional<Autor> autor = autorRepository.findById(autorId);
+
+        if(!autor.isPresent()) throw new InvalidArgumentException(new String[]{"autor não encontrado"});
+
+        livro.setAutor(autor.get());
         livro.setTitulo(this.titulo);
         livro.setDescricao(this.descricao);
         livro.setGenero(this.genero);

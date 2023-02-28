@@ -68,4 +68,12 @@ public class Livro {
     public void setDescricao( String descricao ) {
         this.descricao = descricao;
     }
+
+    public List<Exemplar> getExemplares() {
+        return exemplares;
+    }
+
+    public void setExemplares(List<Exemplar> exemplares) {
+        this.exemplares = exemplares;
+    }
 }

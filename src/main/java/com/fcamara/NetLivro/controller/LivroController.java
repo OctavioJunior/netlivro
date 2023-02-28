@@ -4,6 +4,7 @@ import com.fcamara.NetLivro.controller.form.LivroForm;
 import com.fcamara.NetLivro.model.Livro;
 import com.fcamara.NetLivro.repository.AutorRepository;
 import com.fcamara.NetLivro.repository.LivroRepository;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,21 +49,31 @@ public class LivroController {
 
     @PostMapping
     @Transactional
-    ResponseEntity<Livro> criarLivro(@RequestBody @Valid LivroForm form, UriComponentsBuilder uriBuilder) {
-        Livro livro = form.converter(autorRepository);
+    ResponseEntity criarLivro(@RequestBody @Valid LivroForm form, UriComponentsBuilder uriBuilder) {
+        try {
+            Livro livro = form.converter(autorRepository);
             livroRepository.save(livro);
             URI uri = uriBuilder.path("/livro/{id}").buildAndExpand(livro.getId()).toUri();
             return ResponseEntity.created(uri).body(livro);
+        } catch (InvalidArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getField());
+        }
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Livro> atualizarLivro(@PathVariable Long id, @RequestBody @Valid LivroForm form){
-        Optional<Livro> optional = livroRepository.findById(id);
-        if(optional.isPresent()){
-            Livro livro = form.atualizar(id, livroRepository, autorRepository);
-            return ResponseEntity.ok(livro);
+    public ResponseEntity atualizarLivro(@PathVariable Long id, @RequestBody @Valid LivroForm form){
+        Optional<Livro> livro = livroRepository.findById(id);
+
+        if(livro.isPresent()){
+            try {
+                form.atualizar(livro.get(), autorRepository);
+                return ResponseEntity.ok(livro.get());
+            } catch (InvalidArgumentException e) {
+                return ResponseEntity.badRequest().body(e.getField());
+            }
         }
+
         return ResponseEntity.notFound().build();
     }
 
