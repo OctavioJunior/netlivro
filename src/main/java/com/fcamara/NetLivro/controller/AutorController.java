@@ -52,12 +52,12 @@ public class AutorController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<Autor> atualizarAutor(@PathVariable Long id, @RequestBody @Valid AutorForm form) {
-        Optional<Autor> optional = autorRepository.findById(id);
+        Optional<Autor> autor = autorRepository.findById(id);
 
-        if (optional.isPresent()) {
-            Autor autor = form.atualizar(id, autorRepository);
+        if (autor.isPresent()) {
+            form.atualizar(autor.get());
 
-            return ResponseEntity.ok(autor);
+            return ResponseEntity.ok(autor.get());
         }
 
         return ResponseEntity.notFound().build();

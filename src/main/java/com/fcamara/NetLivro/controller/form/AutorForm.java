@@ -1,12 +1,10 @@
 package com.fcamara.NetLivro.controller.form;
 
 import com.fcamara.NetLivro.model.Autor;
-import com.fcamara.NetLivro.repository.AutorRepository;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 public class AutorForm {
     @NotNull @NotEmpty @Length(min = 5)
@@ -24,9 +22,7 @@ public class AutorForm {
         return new Autor(nome);
     }
 
-    public Autor atualizar(Long id, AutorRepository repository) {
-        Autor autor = repository.getReferenceById(id);
-
+    public Autor atualizar(Autor autor) {
         autor.setNome(this.nome);
 
         return autor;
