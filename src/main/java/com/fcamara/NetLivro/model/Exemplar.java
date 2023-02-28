@@ -37,15 +37,23 @@ public class Exemplar {
         return emprestimo;
     }
 
-    public void setEmprestimo(List emprestimo) {
-        this.emprestimo = emprestimo;
-    }
-
     public boolean isDisponivel() {
         return disponivel;
     }
 
     public void setDisponivel(boolean disponivel) {
         this.disponivel = disponivel;
+    }
+
+    public void setEmprestimo(List<Emprestimo> emprestimo) {
+        this.emprestimo = emprestimo;
+    }
+
+    public Livro getLivro() {
+        return livro;
+    }
+
+    public void setLivro(Livro livro) {
+        this.livro = livro;
     }
 }
