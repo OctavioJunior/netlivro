@@ -1,10 +1,10 @@
 package com.fcamara.NetLivro.controller.form;
 
+import com.fcamara.NetLivro.config.exception.InvalidRequestException;
 import com.fcamara.NetLivro.model.Autor;
 import com.fcamara.NetLivro.model.Genero;
 import com.fcamara.NetLivro.model.Livro;
 import com.fcamara.NetLivro.repository.AutorRepository;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -52,18 +52,16 @@ public class LivroForm {
         this.descricao = descricao;
     }
 
-    public Livro converter(AutorRepository autorRepository) throws InvalidArgumentException {
+    public Livro converter(AutorRepository autorRepository) {
         Optional<Autor> autor = autorRepository.findById(autorId);
-
-        if(!autor.isPresent()) throw new InvalidArgumentException(new String[]{"autor não encontrado"});
+        if(!autor.isPresent()) throw new InvalidRequestException("autor não encontrado");
 
         return new Livro(titulo, autor.get(), genero, descricao);
     }
 
-    public Livro atualizar(Livro livro, AutorRepository autorRepository) throws InvalidArgumentException {
+    public Livro atualizar(Livro livro, AutorRepository autorRepository) {
         Optional<Autor> autor = autorRepository.findById(autorId);
-
-        if(!autor.isPresent()) throw new InvalidArgumentException(new String[]{"autor não encontrado"});
+        if(!autor.isPresent()) throw new InvalidRequestException("autor não encontrado");
 
         livro.setAutor(autor.get());
         livro.setTitulo(this.titulo);

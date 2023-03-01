@@ -1,10 +1,10 @@
 package com.fcamara.NetLivro.controller;
 
+import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.controller.form.ExemplarForm;
 import com.fcamara.NetLivro.model.Exemplar;
 import com.fcamara.NetLivro.repository.ExemplarRepository;
 import com.fcamara.NetLivro.repository.LivroRepository;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,48 +40,34 @@ public class ExemplarController {
     @PostMapping
     @Transactional
     public ResponseEntity cadastrarExemplar(@RequestBody @Valid ExemplarForm form, UriComponentsBuilder uriBuilder){
-       try {
-           Exemplar exemplar = form.converter(livroRepository);
+       Exemplar exemplar = form.converter(livroRepository);
 
-           exemplarRepository.save(exemplar);
+       exemplarRepository.save(exemplar);
 
-           URI uri = uriBuilder.path("/exemplar/{id}").buildAndExpand(exemplar.getId()).toUri();
-           return ResponseEntity.created(uri).body(exemplar);
-       } catch (InvalidArgumentException e) {
-           return ResponseEntity.badRequest().body(e.getField());
-       }
+       URI uri = uriBuilder.path("/exemplar/{id}").buildAndExpand(exemplar.getId()).toUri();
+       return ResponseEntity.created(uri).body(exemplar);
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity atualizarExemplar(@PathVariable Long id, @RequestBody @Valid ExemplarForm form) {
         Optional<Exemplar> exemplar = exemplarRepository.findById(id);
+        if(!exemplar.isPresent()) throw new ResourceNotFoundException("exemplar não encontrado");
 
-        if(exemplar.isPresent()) {
-            try {
-                form.atualizar(exemplar.get(), livroRepository);
-                exemplarRepository.save(exemplar.get());
+        form.atualizar(exemplar.get(), livroRepository);
+        exemplarRepository.save(exemplar.get());
 
-                return ResponseEntity.ok().body(exemplar.get());
-            } catch (InvalidArgumentException e) {
-                return ResponseEntity.badRequest().body(e.getField());
-            }
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(exemplar.get());
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity removerExemplar(@PathVariable Long id) {
         Optional<Exemplar> exemplar = exemplarRepository.findById(id);
+        if(!exemplar.isPresent()) throw new ResourceNotFoundException("exemplar não encontrado");
 
-        if(exemplar.isPresent()) {
-            exemplarRepository.delete(exemplar.get());
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        exemplarRepository.delete(exemplar.get());
+        return ResponseEntity.ok().build();
     }
 
 }

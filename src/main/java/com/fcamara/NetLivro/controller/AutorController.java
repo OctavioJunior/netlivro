@@ -1,5 +1,6 @@
 package com.fcamara.NetLivro.controller;
 
+import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.controller.form.AutorForm;
 import com.fcamara.NetLivro.model.Autor;
 import com.fcamara.NetLivro.repository.AutorRepository;
@@ -31,13 +32,10 @@ public class AutorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Autor> buscarAutorPeloID(@PathVariable Long id) {
-        Optional<Autor> optional = autorRepository.findById(id);
+        Optional<Autor> autor = autorRepository.findById(id);
+        if(!autor.isPresent()) throw new ResourceNotFoundException("autor não encontrado");
 
-        if (optional.isPresent()) {
-            return ResponseEntity.ok(optional.get());
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(autor.get());
     }
 
     @PostMapping
@@ -53,27 +51,21 @@ public class AutorController {
     @Transactional
     public ResponseEntity<Autor> atualizarAutor(@PathVariable Long id, @RequestBody @Valid AutorForm form) {
         Optional<Autor> autor = autorRepository.findById(id);
+        if(!autor.isPresent()) throw new ResourceNotFoundException("autor não encontrado");
 
-        if (autor.isPresent()) {
-            form.atualizar(autor.get());
+        form.atualizar(autor.get());
 
-            return ResponseEntity.ok(autor.get());
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(autor.get());
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity removerAutor(@PathVariable Long id) {
         Optional<Autor> optional = autorRepository.findById(id);
+        if(!optional.isPresent()) throw new ResourceNotFoundException("autor não encontrado");
 
-        if (optional.isPresent()) {
-            autorRepository.deleteById(id);
+        autorRepository.deleteById(id);
 
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 }

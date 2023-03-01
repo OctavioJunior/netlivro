@@ -1,5 +1,6 @@
 package com.fcamara.NetLivro.controller;
 
+import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.controller.dto.UsuarioDto;
 import com.fcamara.NetLivro.controller.form.UsuarioForm;
 import com.fcamara.NetLivro.model.Usuario;
@@ -36,10 +37,10 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity removerUsuario(@PathVariable Long id){
         Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if(usuario.isPresent()){
-            usuarioRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        if(!usuario.isPresent()) throw new ResourceNotFoundException("usuário não encontrado");
+
+        usuarioRepository.deleteById(id);
+
+        return ResponseEntity.ok().build();
     }
 }
