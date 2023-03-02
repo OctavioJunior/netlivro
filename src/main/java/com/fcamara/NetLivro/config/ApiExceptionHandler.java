@@ -1,5 +1,6 @@
 package com.fcamara.NetLivro.config;
 
+import com.fcamara.NetLivro.config.exception.ConflictException;
 import com.fcamara.NetLivro.config.exception.GenericException;
 import com.fcamara.NetLivro.config.exception.InvalidRequestException;
 import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
@@ -29,6 +30,14 @@ public class ApiExceptionHandler {
     @ExceptionHandler(GenericException.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(GenericException ex) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ApiErrorResponse errorResponse = new ApiErrorResponse(status.value(), ex.getMessage());
+        return new ResponseEntity(errorResponse, status);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiErrorResponse> handleConflictException(ConflictException ex) {
+        HttpStatus status = HttpStatus.CONFLICT;
 
         ApiErrorResponse errorResponse = new ApiErrorResponse(status.value(), ex.getMessage());
         return new ResponseEntity(errorResponse, status);
