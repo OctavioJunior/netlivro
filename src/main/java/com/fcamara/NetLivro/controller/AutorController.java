@@ -1,6 +1,6 @@
 package com.fcamara.NetLivro.controller;
 
-import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
+import com.fcamara.NetLivro.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.controller.form.AutorForm;
 import com.fcamara.NetLivro.model.Autor;
 import com.fcamara.NetLivro.repository.AutorRepository;

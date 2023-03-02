@@ -1,7 +1,6 @@
 package com.fcamara.NetLivro.controller;
 
-import com.fcamara.NetLivro.config.exception.InvalidRequestException;
-import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
+import com.fcamara.NetLivro.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.config.security.TokenService;
 import com.fcamara.NetLivro.controller.form.EmprestimoForm;
 import com.fcamara.NetLivro.model.Emprestimo;

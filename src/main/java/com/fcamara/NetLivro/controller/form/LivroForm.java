@@ -1,6 +1,6 @@
 package com.fcamara.NetLivro.controller.form;
 
-import com.fcamara.NetLivro.config.exception.InvalidRequestException;
+import com.fcamara.NetLivro.exception.InvalidRequestException;
 import com.fcamara.NetLivro.model.Autor;
 import com.fcamara.NetLivro.model.Genero;
 import com.fcamara.NetLivro.model.Livro;

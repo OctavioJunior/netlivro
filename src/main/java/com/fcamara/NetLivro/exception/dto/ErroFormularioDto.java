@@ -1,4 +1,4 @@
-package com.fcamara.NetLivro.validacao;
+package com.fcamara.NetLivro.exception.dto;
 
 public class ErroFormularioDto {
     private String campo;

@@ -1,4 +1,4 @@
-package com.fcamara.NetLivro.config.exception;
+package com.fcamara.NetLivro.exception;
 
 public class GenericException extends RuntimeException {
     public GenericException() {

@@ -1,12 +1,12 @@
-package com.fcamara.NetLivro.config;
+package com.fcamara.NetLivro.exception.dto;
 
 
-public class ApiErrorResponse {
+public class ApiErrorResponseDto {
     private int status;
     private String message;
     private Long timestamp;
 
-    public ApiErrorResponse(int status, String message) {
+    public ApiErrorResponseDto(int status, String message) {
         this.status = status;
         this.message = message;
         this.timestamp = System.currentTimeMillis();

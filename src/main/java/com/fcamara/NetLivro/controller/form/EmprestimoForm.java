@@ -1,7 +1,7 @@
 package com.fcamara.NetLivro.controller.form;
 
-import com.fcamara.NetLivro.config.exception.ConflictException;
-import com.fcamara.NetLivro.config.exception.InvalidRequestException;
+import com.fcamara.NetLivro.exception.ConflictException;
+import com.fcamara.NetLivro.exception.InvalidRequestException;
 import com.fcamara.NetLivro.model.Emprestimo;
 import com.fcamara.NetLivro.model.Exemplar;
 import com.fcamara.NetLivro.model.Usuario;
