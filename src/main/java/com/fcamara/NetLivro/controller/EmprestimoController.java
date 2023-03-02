@@ -1,5 +1,7 @@
 package com.fcamara.NetLivro.controller;
 
+import com.fcamara.NetLivro.config.exception.InvalidRequestException;
+import com.fcamara.NetLivro.config.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.config.security.TokenService;
 import com.fcamara.NetLivro.controller.form.EmprestimoForm;
 import com.fcamara.NetLivro.model.Emprestimo;
@@ -15,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/emprestimo")
@@ -58,5 +62,17 @@ public class EmprestimoController {
 
         URI uri = uriBUilder.path("emprestimo/{id}").buildAndExpand(emprestimo.getId()).toUri();
         return ResponseEntity.created(uri).body(emprestimo);
+    }
+
+    @PatchMapping("/{id}")
+    @Transactional
+    public ResponseEntity devolucao(@PathVariable Long id){
+        Optional<Emprestimo> emprestimo = emprestimoRepository.findById(id);
+        if(!emprestimo.isPresent()) throw new ResourceNotFoundException("empréstimo não encontrado");
+        emprestimo.get().setDataDevolucao(LocalDate.now());
+        emprestimo.get().getExemplar().setDisponivel(true);
+//        emprestimoRepository.save(emprestimo.get());
+//        exemplarRepository.save(emprestimo.get().getExemplar());
+        return ResponseEntity.ok().build();
     }
 }
