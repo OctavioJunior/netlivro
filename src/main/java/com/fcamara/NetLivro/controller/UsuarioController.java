@@ -1,5 +1,6 @@
 package com.fcamara.NetLivro.controller;
 
+import com.fcamara.NetLivro.exception.ConflictException;
 import com.fcamara.NetLivro.exception.ResourceNotFoundException;
 import com.fcamara.NetLivro.controller.dto.UsuarioDto;
 import com.fcamara.NetLivro.controller.form.UsuarioForm;
@@ -25,6 +26,9 @@ public class UsuarioController {
     @PostMapping
     @Transactional
     public ResponseEntity<UsuarioDto> criarUsuario(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
+        Optional<Usuario> usedEmailUser = usuarioRepository.findByEmail(form.getEmail());
+        if(usedEmailUser.isPresent()) throw new ConflictException("este e-mail já está em uso");
+
         Usuario usuario = form.converter();
 
         usuarioRepository.save(usuario);
